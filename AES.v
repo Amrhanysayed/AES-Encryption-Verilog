@@ -45,9 +45,9 @@ module inverse_shift_Rows(input [127:0] state ,output wire [127:0] out);
 endmodule
 
 module decoder(input[2:0] word,output wire[6:0]HEX0,output wire[6:0]HEX1,output wire[6:0] HEX2);
-reg HEX0_1[6:0];
-reg HEX0_2[6:0];
-reg HEX0_3[6:0];    
+reg [6:0] HEX0_1;
+reg [6:0] HEX0_2;
+reg [6:0] HEX0_3;    
 always @(*) 
 begin 
 if(word[0]==0)
