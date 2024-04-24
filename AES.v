@@ -3,7 +3,7 @@ module ShiftRows (input [127:0] state ,output wire [127:0] out  );
     assign out[7:0]=state[7:0];
     assign out[39:32]=state[39:32];
     assign out[71:64]=state[71:64];
-    assign out[103:69]=state[103:69];
+    assign out[103:96]=state[103:96];
     //second row
     assign out[15:8]=state[47:40];
     assign out[47:40]=state[79:72];
@@ -26,7 +26,7 @@ module inverse_shift_Rows(input [127:0] state ,output wire [127:0] out);
     assign out[7:0]=state[7:0];
     assign out[39:32]=state[39:32];
     assign out[71:64]=state[71:64];
-    assign out[103:69]=state[103:69];
+    assign out[103:96]=state[103:96];
     //second row
     assign out[15:8]=state[111:104];
     assign out[47:40]=state[15:8];
@@ -42,7 +42,4 @@ module inverse_shift_Rows(input [127:0] state ,output wire [127:0] out);
     assign out[63:56]=state[95:88];
     assign out[95:88]=state[127:120];
     assign out[127:120]=state[31:24];
-
-
-
 endmodule
