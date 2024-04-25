@@ -1,124 +1,124 @@
-module ShiftRows (input [127:0] state ,output wire [127:0] out  );
+module ShiftRows (input [0:127] state ,output wire [0:127] out  );
     //first row
-    assign out[7:0]=state[7:0];
-    assign out[39:32]=state[39:32];
-    assign out[71:64]=state[71:64];
-    assign out[103:96]=state[103:96];
+  	assign out[0:7]=state[0:7];
+  	assign out[32:39]=state[32:39];
+  	assign out[64:71]=state[64:71];
+  	assign out[96:103]=state[96:103];
     //second row
-    assign out[15:8]=state[47:40];
-    assign out[47:40]=state[79:72];
-    assign out[79:72]=state[111:104];
-    assign out[111:104]=state[15:8];
+  	assign out[8:15]=state[40:47];
+  	assign out[40:47]=state[72:79];
+ 	assign out[72:79]=state[104:111];
+    assign out[104:111]=state[8:15];
     //third row
-    assign out[87:80]=state[23:16];
-    assign out[119:112]=state[55:48];
-    assign out[23:16]=state[87:80];
-    assign out[55:48]=state[119:112];
+  assign out[80:87]=state[16:23];
+  assign out[112:119]=state[48:55];
+  assign out[16:23]=state[80:87];
+    assign out[48:55]=state[112:119];
     //fourth row
-    assign out[31:24]=state[127:120];
-    assign out[63:56]=state[31:24];
-    assign out[95:88]=state[63:56];
-    assign out[127:120]=state[95:88];
-endmodule 
-
-module inverse_shift_Rows(input [127:0] state ,output wire [127:0] out);
-    //first row
-    assign out[7:0]=state[7:0];
-    assign out[39:32]=state[39:32];
-    assign out[71:64]=state[71:64];
-    assign out[103:96]=state[103:96];
-    //second row
-    assign out[15:8]=state[111:104];
-    assign out[47:40]=state[15:8];
-    assign out[79:72]=state[47:40];
-    assign out[111:104]=state[79:72];
-    //third row
-    assign out[23:16]=state[87:80];
-    assign out[55:48]=state[119:112];
-    assign out[87:80]=state[23:16];
-    assign out[119:112]=state[55:48];
-    //fourth row
-    assign out[31:24]=state[63:56];
-    assign out[63:56]=state[95:88];
-    assign out[95:88]=state[127:120];
-    assign out[127:120]=state[31:24];
+  assign out[24:31]=state[120:127];
+  assign out[56:63]=state[24:31];
+  assign out[88:95]=state[56:63];
+  assign out[120:127]=state[88:95];
 endmodule
 
-module decoder(input[2:0] word,output wire[6:0]HEX0,output wire[6:0]HEX1,output wire[6:0] HEX2);
+module inverse_shift_Rows(input [0:127] state ,output wire [0:127] out);
+    //first row
+  assign out[0:7]=state[0:7];
+  assign out[32:39]=state[32:39];
+  assign out[64:71]=state[64:71];
+  assign out[96:103]=state[96:103];
+    //second row
+  assign out[8:15]=state[104:111];
+  assign out[40:47]=state[8:15];
+  assign out[72:79]=state[40:47];
+  assign out[104:111]=state[72:79];
+    //third row
+  assign out[16:23]=state[80:87];
+  assign out[48:55]=state[112:119];
+  assign out[80:87]=state[16:23];
+    assign out[112:119]=state[48:55];
+    //fourth row
+  assign out[24:31]=state[56:63];
+  assign out[56:63]=state[88:95];
+  assign out[88:95]=state[120:127];
+    assign out[120:127]=state[24:31];
+endmodule
+
+module decoder(input[11:0] word,output wire[6:0]HEX0,output wire[6:0]HEX1,output wire[6:0] HEX2);
 reg [6:0] HEX0_1;
 reg [6:0] HEX0_2;
 reg [6:0] HEX0_3;    
 always @(*) 
 begin 
-if(word[0]==0)
+if(word[3:0]==0)
      HEX0_1<=7'b1000000;
-else if(word[0]==1)
+else if(word[3:0]==1)
      HEX0_1<=7'b1111001;
-else if(word[0]==2)
+else if(word[3:0]==2)
      HEX0_1<=7'b0100100;
-else if(word[0]==3)
+else if(word[3:0]==3)
      HEX0_1<=7'b0110000;
-else if(word[0]==4)
+else if(word[3:0]==4)
      HEX0_1<=7'b0011001;
-else if(word[0]==5)
+else if(word[3:0]==5)
      HEX0_1<=7'b0010010;
-else if(word[0]==6)
+else if(word[3:0]==6)
      HEX0_1<=7'b0000010;
-else if(word[0]==7)
+else if(word[3:0]==7)
      HEX0_1<=7'b0111000;
-else if(word[0]==8)
+else if(word[3:0]==8)
      HEX0_1<=7'b0000000;
-else if(word[0]==9)
+else if(word[3:0]==9)
      HEX0_1<=7'b0010000;
 else 
      HEX0_1<=7'b1111111;
 end
 always @(*) 
 begin 
-if(word[1]==0)
+if(word[7:4]==0)
      HEX0_2<=7'b1000000;
-else if(word[1]==1)
+else if(word[7:4]==1)
      HEX0_2<=7'b1111001;
-else if(word[1]==2)
+else if(word[7:4]==2)
      HEX0_2<=7'b0100100;
-else if(word[1]==3)
+else if(word[7:4]==3)
      HEX0_2<=7'b0110000;
-else if(word[1]==4)
+else if(word[7:4]==4)
      HEX0_2<=7'b0011001;
-else if(word[1]==5)
+else if(word[7:4]==5)
      HEX0_2<=7'b0010010;
-else if(word[1]==6)
+else if(word[7:4]==6)
      HEX0_2<=7'b0000010;
-else if(word[1]==7)
+else if(word[7:4]==7)
      HEX0_2<=7'b0111000;
-else if(word[1]==8)
+else if(word[7:4]==8)
      HEX0_2<=7'b0000000;
-else if(word[1]==9)
+else if(word[7:4]==9)
      HEX0_2<=7'b0010000;
 else 
      HEX0_2<=7'b1111111;
 end
 always @(*) 
 begin 
-if(word[2]==0)
+if(word[11:8]==0)
      HEX0_3<=7'b1000000;
-else if(word[2]==1)
+else if(word[11:8]==1)
      HEX0_3<=7'b1111001;
-else if(word[2]==2)
+else if(word[11:8]==2)
      HEX0_3<=7'b0100100;
-else if(word[2]==3)
+else if(word[11:8]==3)
      HEX0_3<=7'b0110000;
-else if(word[2]==4)
+else if(word[11:8]==4)
      HEX0_3<=7'b0011001;
-else if(word[2]==5)
+else if(word[11:8]==5)
      HEX0_3<=7'b0010010;
-else if(word[2]==6)
+else if(word[11:8]==6)
      HEX0_3<=7'b0000010;
-else if(word[2]==7)
+else if(word[11:8]==7)
      HEX0_3<=7'b0111000;
-else if(word[2]==8)
+else if(word[11:8]==8)
      HEX0_3<=7'b0000000;
-else if(word[2]==9)
+else if(word[11:8]==9)
      HEX0_3<=7'b0010000;
 else 
      HEX0_3<=7'b1111111;
