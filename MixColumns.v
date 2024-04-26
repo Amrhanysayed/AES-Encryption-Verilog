@@ -56,19 +56,18 @@ module InvMixColumns(input [127:0] state_in, output [127:0] state_out);
         input [7:0] a; // input
         input [7:0] b; // input
         if(b == 8'h0e) begin
-            mul = mul2(mul2(mul2(a))) ^ mul2(a) ^ mul2(a) ^ mul2(a);
+            mul = mul2(mul2(mul2(a))) ^ mul2(mul2(a)) ^ mul2(a);
         end
         else if(b == 8'h0b) begin
             mul = mul2(mul2(mul2(a))) ^ mul2(a) ^ a;
         end
         else if(b == 8'h0d) begin
-            mul = mul2(mul2(mul2(a))) ^ mul2(a) ^ mul2(a) ^ a;
+            mul = mul2(mul2(mul2(a))) ^ mul2(mul2(a)) ^ a;
         end
         else if(b == 8'h09) begin
             mul = mul2(mul2(mul2(a))) ^ a;
         end
      endfunction
-
 
 
      genvar i;
