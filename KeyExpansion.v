@@ -4,7 +4,7 @@ module keyexpansion(input[127:0] keyin,output[1407:0]keys);
      genvar i;
      generate
 
-     for ( i=0;i<10 ;i=i+1 ) begin
+     for ( i=0;i<10 ;i=i+1 ) begin: keyexpansion_loop
      keyexpansion_ s(keys[(1407-(i*128)):(1280-(i*128))],keys[(1279-(i*128)):(1152-(i*128))],i);
 
      end
