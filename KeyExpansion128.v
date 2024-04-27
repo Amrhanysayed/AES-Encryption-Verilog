@@ -322,7 +322,7 @@ module KeyExpansion128_tb();
 	reg [0:127] keyin;
 	wire [0:1407] keys;
 
-	xy uut(keyin,keys);
+	KeyExpansion128 uut(keyin,keys);
 
 	integer i;
 
