@@ -1,18 +1,18 @@
-module keyexpansion(input[127:0] keyin,output[1407:0]keys);
+module KeyExpansion256(input[255:0] keyin,output[1919:0]keys);
 
-     assign keys[1407:1280]=keyin;
+     assign keys[1919:1664]=keyin;
      genvar i;
      generate
 
-     for ( i=0;i<10 ;i=i+1 ) begin: keyexpansion_loop
-     keyexpansion_ s(keys[(1407-(i*128)):(1280-(i*128))],keys[(1279-(i*128)):(1152-(i*128))],i);
+     for ( i=0;i<13 ;i=i+1 ) begin: keyexpansion_loop
+     keyExpansion_128 s(keys[(1791-(i*128)):(1664-(i*128))],keys[(1663-(i*128)):(1536-(i*128))],i);
 
      end
      endgenerate
 
 endmodule
 
-module keyexpansion_(input [127:0] keyin,output [127:0] keyout,input integer round);
+module keyExpansion_128(input [127:0] keyin,output [127:0] keyout,input integer round);
      /// search for word in verilog
      wire[31:0] w0,w1,w2,w3,w3shifiting;
      wire[31:0] w0out,w1out,w2out,w3out;
@@ -51,6 +51,9 @@ module keyexpansion_(input [127:0] keyin,output [127:0] keyout,input integer rou
           7:rcon=32'h80_00_00_00;
           8:rcon=32'h1b_00_00_00;
           9:rcon=32'h36_00_00_00;
+          10: rcon = 32'h6c_00_00_00;
+          11: rcon = 32'hd8_00_00_00;
+          12: rcon = 32'hab_00_00_00;
           default: rcon=32'h00_00_00_00; 
           endcase
      endfunction
