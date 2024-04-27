@@ -5,7 +5,7 @@ assign keys[0:191]=keyin;
 
     genvar i;
     generate
-	for (i = 6 ;i < 52; i = i + 1) begin
+	for (i = 6 ;i < 52; i = i + 1) begin: keyexpansion192_loop
 		if(i % 6==0) begin
 			assign keys[(i * 32) +: 32] =   keys[((i - 6) * 32) +: 32] ^ subwordx(rotword(keys[((i - 1) * 32) +: 32])) ^ Rcon(i/6);
 		end

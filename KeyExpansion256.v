@@ -4,7 +4,7 @@ module KeyExpansion256 (input [0:255]keyin,output[0:1919]keys);
 
     genvar i;
     generate
-	for (i = 8 ;i < 60; i = i + 1) begin
+	for (i = 8 ;i < 60; i = i + 1) begin: keyexpansion256_loop
 		if(i % 8==0) begin
 			assign keys[(i * 32) +: 32] =   keys[((i - 8) * 32) +: 32] ^ subwordx(rotword(keys[((i - 1) * 32) +: 32])) ^ Rcon(i/8);
 		end
