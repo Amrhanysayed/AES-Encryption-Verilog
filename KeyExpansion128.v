@@ -327,7 +327,7 @@ module KeyExpansion128_tb();
 	integer i;
 
 	initial begin
-		keyin = 128'h2b7e151628aed2a6abf7158809cf4f3c;
+		keyin = 128'h000102030405060708090a0b0c0d0e0f;
 		#10;
 
 		for (i = 0; i < 44; i = i + 1) begin
