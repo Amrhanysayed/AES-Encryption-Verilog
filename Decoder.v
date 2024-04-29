@@ -1,4 +1,4 @@
-module decoder(input[11:0] word,output wire[6:0]HEX0,output wire[6:0]HEX1,output wire[6:0] HEX2);
+module Decoder(input[11:0] word,output wire[6:0]HEX0,output wire[6:0]HEX1,output wire[6:0] HEX2);
 reg [6:0] HEX0_1;
 reg [6:0] HEX0_2;
 reg [6:0] HEX0_3;    
