@@ -1,49 +1,47 @@
-module Cipher128(output wire [127:0] out1,input clk);
-    wire [127:0] state;
+module Cipher128(output wire [127:0] out1,input clk,input [127:0]state,input [127:0]key);
     reg  [127:0] state0;
     reg  [127:0]temp;
-    wire [127:0] key;
+    // wire [127:0] key;
     wire [127:0] out;
     wire [127:0] out_lastround;
     integer i=-1;
-    assign state = 128'h00112233445566778899aabbccddeeff;
-    assign key = 128'h000102030405060708090a0b0c0d0e0f;
+    //assign state = 128'h00112233445566778899aabbccddeeff;
+    //assign key = 128'h000102030405060708090a0b0c0d0e0f;
     wire [0:1407] w;
     KeyExpansion128 uut(key, w);
     round x(state0, w[((i+1)*128)+:128],out);   
  always@ (posedge clk) 
     begin 
-        if(i==-1)
+        if(i==-1 && state !== 'bx)
         begin
             state0<=state^w[0:127];
             temp<=out;
             i=i+1;
         end
-        else if(i<10)
+        else if(i<9 && state !== 'bx)
         begin
         state0<=out;  
         temp<=out;
         i=i+1;
         end
-        else if(i==10)
+        else if(i==9 && state !== 'bx)
         begin
             temp<=out_lastround;
+            i=i+1;
         end
     end
     assign out1=temp;
     last_round xs(state0,w[((i+1)*128)+:128],out_lastround);
-    assign temp=out_lastround;
+    //assign temp=out_lastround;
 endmodule
 
-module InvCipher128(output [127:0] out1,input clk);
-    wire [127:0] state;
-    wire [127:0] key;
+module InvCipher128(output [127:0] out1,input clk,input [127:0]state,input [127:0]key);
     reg  [127:0] state0;
     reg  [127:0]temp;
     wire [127:0] out;
     wire [127:0] out_lastround;
-    assign state = 128'h69c4e0d86a7b0430d8cdb78070b4c55a;
-    assign key = 128'h000102030405060708090a0b0c0d0e0f;
+    //assign state = 128'h69c4e0d86a7b0430d8cdb78070b4c55a;
+   // assign key = 128'h000102030405060708090a0b0c0d0e0f;
     integer i=10;
 
     
@@ -53,26 +51,27 @@ module InvCipher128(output [127:0] out1,input clk);
     round_inverse r(state0,w[((i)*128)+:128],out);
     always@ (posedge clk) 
     begin 
-        if(i==10)
+        if(i==10 && state !== 'bx)
         begin
             state0<=state^w[1280+:128];
             temp<=out;
             i=i-1;
         end
-        else if(i>0)
+        else if(i>0&& state !== 'bx)
         begin
         state0<=out;  
         temp<=out;
         i=i-1;
         end
-        else if(i==0)
+        else if(i==0 && state !== 'bx)
         begin
             temp<=out_lastround;
+            i=i-1;
         end
     end
     assign out1=temp;
     last_round_inv l(state0,w [((i)*128)+:128],out_lastround);
-    assign temp=out_lastround;
+    //assign temp=out_lastround;
 
 endmodule
 
