@@ -1,6 +1,6 @@
 module main(input[2:0]SW,output wire[6:0] HEX0,output wire[6:0] HEX1,output wire[6:0] HEX2,input clk,output wire [127:0]out_main,output wire [127:0] out_desipher);
 integer i=0;
-integer j=0;
+integer j;
 //decipher
 reg  [127:0]in_disipher;
 wire [127:0]main_disipher_input;
@@ -36,32 +36,35 @@ Cipher128 c(temp_out_main_cipher,clk,state_128,key_128);
 assign out_main=temp_out_main_cipher;
 InvCipher128 s(temp_out_main_decipher,clk,main_disipher_input,key_128);
 assign out_desipher=temp_out_main_decipher;
-assign encoder_input=out_main;
+assign encoder_input=out_main[7:0];
     reg [11:0]bcd;
-     always @(posedge clk)
+     always @(encoder_input or posedge clk)
         begin
+          
             bcd = 0; //initialize bcd to zero.
             for (j = 0; j < 8; j = j+1) //run for 8 iterations
             begin
-                bcd = {bcd[10:0],encoder_input[7-i]}; //shifting and assign to bcd
+               
+               bcd = {bcd[10:0],encoder_input[7-j]}; //shifting and assign to bcd
                     
                 //if a binary digit of 'bcd' is more than 4, add 3 to it.  
-                if(i < 7 && bcd[3:0] > 4) 
+                if(j < 7 && bcd[3:0] > 4&&bcd[3:0]!=='bx) 
                     bcd[3:0] = bcd[3:0] + 3;
-                if(i < 7 && bcd[7:4] > 4)
+                if(j < 7 && bcd[7:4] > 4&&bcd[7:4]!=='bx)
                     bcd[7:4] = bcd[7:4] + 3;
-                if(i < 7 && bcd[11:8] > 4)
+                if(j < 7 && bcd[11:8] > 4&&bcd[11:8]!=='bx)
                     bcd[11:8] = bcd[11:8] + 3;  
-            end
+               
+            
+          end
         end    
 assign input_decoder=bcd; //assign the output
 reg [6:0] HEX0_1;
 reg [6:0] HEX0_2;
 reg [6:0] HEX0_3;    
-always @(posedge clk) 
+always @(input_decoder or posedge clk)  
 begin 
-    if(input_decoder!== 'bx)
-    begin
+   
 if(input_decoder[3:0]==0)
      HEX0_1<=7'b1000000;
 else if(input_decoder[3:0]==1)
@@ -84,12 +87,11 @@ else if(input_decoder[3:0]==9)
      HEX0_1<=7'b0010000;
 else 
      HEX0_1<=7'b1111111;
-    end
+    
 end
-always @(posedge clk) 
+always @(input_decoder or posedge clk) 
 begin 
-    if(input_decoder!== 'bx)
-    begin
+    
 if(input_decoder[7:4]==0)
      HEX0_2<=7'b1000000;
 else if(input_decoder[7:4]==1)
@@ -112,13 +114,12 @@ else if(input_decoder[7:4]==9)
      HEX0_2<=7'b0010000;
 else 
      HEX0_2<=7'b1111111;
+
 end
-end
-always @(posedge clk) 
+always @(input_decoder or posedge clk) 
 begin 
-    if(input_decoder!== 'bx)
-    begin
-if(input_decoder[11:8]==0)
+   
+if(input_decoder[7:0]!='bx&&input_decoder[11:8]==0)
      HEX0_3<=7'b1000000;
 else if(input_decoder[11:8]==1)
      HEX0_3<=7'b1111001;
@@ -140,7 +141,7 @@ else if(input_decoder[11:8]==9)
      HEX0_3<=7'b0010000;
 else 
      HEX0_3<=7'b1111111;
-    end
+    
 end
 assign HEX0=HEX0_1;
 assign HEX1=HEX0_2;
