@@ -15,7 +15,7 @@ module Cipher128(output wire [127:0] out1,input clk,input [127:0]state,input [12
         if(i==-1 && state !== 'bx)
         begin
             state0<=state^w[0:127];
-            temp<=out;
+            temp=state^w[0:127];
             i=i+1;
         end
         else if(i < 9 && state !== 'bx)

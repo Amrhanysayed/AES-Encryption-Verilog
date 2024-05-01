@@ -1,7 +1,7 @@
-/*module Encoder(input [7:0]bin,output wire[11:0]bcd_out);
+module Encoder(input [7:0]bin,output wire[11:0]bcd_out);
     integer i;   
     reg [11:0]bcd;
-     always @(bin)
+     always @(*)
         begin
             bcd = 0; //initialize bcd to zero.
             for (i = 0; i < 8; i = i+1) //run for 8 iterations
@@ -18,5 +18,5 @@
             end
         end    
     assign bcd_out=bcd; //assign the output
-endmodule*/
+endmodule
 

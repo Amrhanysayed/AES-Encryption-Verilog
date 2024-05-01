@@ -1,4 +1,4 @@
-module Cipher192(output wire [127:0] out1,input clk);//, input [127:0]state, input [191:0] key);
+module Cipher192(output wire [127:0] out1,input clk, input [127:0]state, input [191:0] key);
     reg  [127:0] state0;
     reg  [127:0] temp;
     wire [127:0] out;
@@ -6,10 +6,10 @@ module Cipher192(output wire [127:0] out1,input clk);//, input [127:0]state, inp
     integer i=-1;
 
     // for testing
-    wire [127:0] state;
-    wire [191:0] key;
-    assign state = 128'h00112233445566778899aabbccddeeff;
-    assign key = 192'h000102030405060708090a0b0c0d0e0f1011121314151617;
+    // wire [127:0] state;
+    // wire [191:0] key;
+    // assign state = 128'h00112233445566778899aabbccddeeff;
+    // assign key = 192'h000102030405060708090a0b0c0d0e0f1011121314151617;
     wire [0:1663] w;
     KeyExpansion192 uut(key, w);
     round x(state0, w[((i+1)*128)+:128],out);   
@@ -18,7 +18,7 @@ module Cipher192(output wire [127:0] out1,input clk);//, input [127:0]state, inp
         if(i==-1 && state !== 'bx)
         begin
             state0<=state^w[0:127];
-            temp<=out;
+            temp=state0;
             i=i+1;
         end
         else if(i < 11 && state !== 'bx)

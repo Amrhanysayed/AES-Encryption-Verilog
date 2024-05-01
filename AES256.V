@@ -1,13 +1,13 @@
-module Cipher256(output wire [127:0] out1,input clk);
+module Cipher256(output wire [127:0] out1,input clk, input [127:0]state, input [255:0] key);
     reg  [127:0] state0;
     reg  [127:0] temp;
-    wire [127:0] state;
-    wire [255:0] key;
+    //wire [127:0] state;
+    //wire [255:0] key;
     wire [127:0] out;
     wire [127:0] out_lastround;
     integer i=-1;
-    assign state = 128'h00112233445566778899aabbccddeeff;
-    assign key = 256'h000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f;
+    //assign state = 128'h00112233445566778899aabbccddeeff;
+    //assign key = 256'h000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f;
     wire [0:1919] w;
     KeyExpansion256 uut(key, w);
     round x(state0, w[((i+1)*128)+:128],out);   
@@ -16,7 +16,7 @@ module Cipher256(output wire [127:0] out1,input clk);
         if(i==-1 && state !== 'bx)
         begin
             state0<=state^w[0:127];
-            temp<=out;
+            temp=state^w[0:127];
             i=i+1;
         end
         else if(i < 13 && state !== 'bx)
@@ -36,15 +36,15 @@ module Cipher256(output wire [127:0] out1,input clk);
     //assign temp=out_lastround;
 endmodule
 
-module InvCipher256(output [127:0] out1,input clk);
+module InvCipher256(output [127:0] out1,input clk, input [127:0]state, input [255:0] key);
     reg  [127:0] state0;
     reg  [127:0]temp;
     wire [127:0] out;
     wire [127:0] out_lastround;
-    wire [255:0]key;
-     wire  [127:0]state;
-    assign state = 128'h8ea2b7ca516745bfeafc49904b496089;
-    assign key = 256'h000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f;
+    // wire [255:0]key;
+    //  wire  [127:0]state;
+    // assign state = 128'h8ea2b7ca516745bfeafc49904b496089;
+    // assign key = 256'h000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f;
     integer i=14;
 
     
