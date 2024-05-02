@@ -1,18 +1,32 @@
+module keyExpansion #(parameter nk=4,parameter nr=10)(keyin,keys);
 
-module KeyExpansion128 (input [0:127]keyin,output[0:1407]keys);
-	assign keys[0:127]=keyin;
-
+output[0:((nr+1)*128)-1] keys;
+input wire [0:(nk*32)-1] keyin;
+/////////////////////// testing keyin
+//assign keyin = 128'h2b7e151628aed2a6abf7158809cf4f3c;
+assign keys[0:(nk*32)-1]=keyin;
+///////////////////////////
     genvar i;
     generate
-	for (i = 4 ;i < 44; i = i + 1) begin: keyexpansion128_loop
-		if(i % 4==0) begin
-			assign keys[(i * 32) +: 32] =   keys[((i - 4) * 32) +: 32] ^ subwordx(rotword(keys[((i - 1) * 32) +: 32])) ^ Rcon(i/4);
+	for (i = nk ;i < (nr+1)*4; i = i + 1) begin: keyexpansion256_loop
+		if(i % nk==0) begin
+			assign keys[(i * 32) +: 32] =   keys[((i - nk) * 32) +: 32] ^ subwordx(rotword(keys[((i - 1) * 32) +: 32])) ^ Rcon(i/nk);
+		end
+		else if (i % nk == 4 && nk>6) begin
+			assign keys[(i * 32) +: 32] = subwordx(keys[((i - 1) * 32) +: 32])^ keys[((i - nk) * 32) +: 32];
 		end
 		else begin
-			assign  keys[(i * 32) +: 32] = keys[((i - 1) * 32) +: 32] ^ keys[((i - 4) * 32) +: 32];
+			assign keys[(i * 32) +: 32] = keys[((i - 1) * 32) +: 32] ^ keys[((i - nk) * 32) +: 32];
 		end 
 	end
 endgenerate
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 function [0:31] rotword;
 	input [0:31] x;
@@ -318,20 +332,37 @@ endfunction
 
 endmodule
  //// comment this part when working on  main module
-module KeyExpansion128_tb();
-	reg [0:127] keyin;
-	wire [0:1407] keys;
+module keyExpansion_tb;
 
-	KeyExpansion128 uut(keyin,keys);
+// Parameters
+parameter nk = 4; // Number of words in the key
+parameter nr = 10; // Number of rounds
+///////////////////////////////////////
+//parameter nk = 6; // Number of words in the key
+//parameter nr = 12; // Number of rounds
+///////////////////////////////////////
+// parameter nk = 8; // Number of words in the key
+// parameter nr = 14; // Number of rounds
+// Signals
+reg [0:(nk*32)-1] keyin; // Input key
+wire [0:((nr+1)*128)-1] keys; // Output expanded keys
 
-	integer i;
+// Instantiate the keyExpansion module
+keyExpansion #(nk, nr) key_expansion_inst (keyin,keys);
+
+// Test stimulus
+
+integer i;
 
 	initial begin
-		keyin = 128'h000102030405060708090a0b0c0d0e0f;
+		keyin = 128'h2b7e151628aed2a6abf7158809cf4f3c;
+        //keyin = 256'h603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4;
+       // keyin = 192'h8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b;
 		#10;
 
-		for (i = 0; i < 44; i = i + 1) begin
+		for (i = 0; i < (nr+1)*4; i = i + 1) begin
 			$display("keys[%0d] = %h", i, keys[(i * 32) +: 32]);
 		end
 	end
+
 endmodule
