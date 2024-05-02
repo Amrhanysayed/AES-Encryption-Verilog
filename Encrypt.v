@@ -1,5 +1,5 @@
-module Encrypt  #(parameter nk=4,parameter nr=10) (key,input clk,input [127:0]state,output wire [127:0] out1);
-    input  [(nk*32)-1:0] key;
+module Encrypt  #(parameter nk=4,parameter nr=10) (input  [(nk*32)-1:0] key,input clk,input [127:0]state,output wire [127:0] out1);
+    //;
     //wire [127:0] state;
     reg  [127:0] state0;
     reg  [127:0]temp;

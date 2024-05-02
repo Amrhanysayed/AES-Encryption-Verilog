@@ -1,9 +1,9 @@
 
 
-module Decrypt  #(parameter nk=4,parameter nr=10) (key,input clk,input enable,input [127:0]state,output wire [127:0] out1);
-     input  [(nk*32)-1:0] key;
+module Decrypt  #(parameter nk=4,parameter nr=10) ( input  [(nk*32)-1:0] key,input clk, input  enable,input [127:0]state,output wire [127:0] out1);
+    
     reg  [127:0] state0;
-    wire [127:0] state;
+    // wire [127:0] state;
     reg  [127:0]temp;
     wire [127:0] out;
     wire [127:0] out_lastround;
@@ -21,7 +21,7 @@ module Decrypt  #(parameter nk=4,parameter nr=10) (key,input clk,input enable,in
     round_inverse r(state0,w[((i)*128)+:128],out);
     always@ (posedge clk) 
     begin 
-        if(enable==1)
+        if(enable==1'b1)
     begin
          if(i==nr && state !== 'bx)
         begin
