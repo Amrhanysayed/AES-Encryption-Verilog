@@ -1,10 +1,6 @@
- module main(input[2:0]SW,output wire[6:0] HEX0,output wire[6:0] HEX1,output wire[6:0] HEX2,input clk_128,input clk_192,input clk_256,output wire[1:0] LEDR);
+ module main(input[2:0]SW,input clk,output wire[6:0] HEX0,output wire[6:0] HEX1,output wire[6:0] HEX2,output wire[1:0] LEDR,output wire [127:0]out_main);
 
-/////////////////////////////////////the main need to change /////////////////////////////////////////////////
-
-
-
-
+  /////////////////////////////////////the main need to change /////////////////////////////////////////////////
 
 // ///// run 3100 ---> clocck 100 /// AES 256
 // ///// run 2100 ---> clocck 100 /// AES 128
@@ -129,8 +125,82 @@
 // Decoder d1(input_decoder,HEX0,HEX1,HEX2);
 // // Decoder d2(input_decoder,HEX0,HEX1,HEX2);
 // // Decoder d3(input_decoder,HEX0,HEX1,HEX2);
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////// new main  ////////////////////////////////////////////////////////////////
+localparam nk_128 =4 ;
+localparam nr_128 =10 ;
+localparam nk_192 =6 ;
+localparam nr_192 =12 ;
+localparam nk_256 =8 ;
+localparam nr_256 =14 ;
+integer counter=0;
+integer nk;
+integer nr;
+wire enable_Decipher;
+wire [127:0]key_128;
+wire [191:0]key_192;
+wire [255:0]key_256;
+wire [127:0] out_desipher;
+assign state = 128'h00112233445566778899aabbccddeeff;
+assign key_128 = 128'h000102030405060708090a0b0c0d0e0f;
+assign key_192 = 192'h000102030405060708090a0b0c0d0e0f1011121314151617;
+assign key_256 = 256'h000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f;
+/////////////////////////////////////////////////////////////128 bit////////////////////////////////////////////////////////////
+initial begin
+     enable_Decipher=0;
+     nk=0;
+     nr=0;
+end
+
+
+
+Encrypt #(nk, nr) e1(key_128,clk,state,out_main);
+always@(posedge clk)
+begin
+   
+    if(SW[0]==1)
+    begin
+        nk=4;
+        nr=10;
+    end
+    else if(SW[1]==1)
+    begin
+        nk=6;
+        nr=12;
+
+    end
+     else if(SW[2]==1)
+     begin
+          nk=8;
+          nr=14;
+
+     end  
+  counter=counter+1;
+  if(counter==nr+1)
+     begin
+        enable_Decipher=1;
+     end
+
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ///////////////////////////////////////////////////////flag check///////////////////////////////////////////////////
+
 reg ledr;
 always @(*)
 begin
