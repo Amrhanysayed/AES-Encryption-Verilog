@@ -2,8 +2,6 @@ module keyExpansion #(parameter nk=4,parameter nr=10)(keyin,keys);
 
 output[0:((nr+1)*128)-1] keys;
 input wire [0:(nk*32)-1] keyin;
-/////////////////////// testing keyin
-//assign keyin = 128'h2b7e151628aed2a6abf7158809cf4f3c;
 assign keys[0:(nk*32)-1]=keyin;
 ///////////////////////////
     genvar i;
@@ -329,40 +327,5 @@ function[0:31] Rcon;
 	end
 endfunction
 
-
-endmodule
- //// comment this part when working on  main module
-module keyExpansion_tb;
-
-// Parameters
-parameter nk = 4; // Number of words in the key
-parameter nr = 10; // Number of rounds
-///////////////////////////////////////
-//parameter nk = 6; // Number of words in the key
-//parameter nr = 12; // Number of rounds
-///////////////////////////////////////
-// parameter nk = 8; // Number of words in the key
-// parameter nr = 14; // Number of rounds
-// Signals
-reg [0:(nk*32)-1] keyin; // Input key
-wire [0:((nr+1)*128)-1] keys; // Output expanded keys
-
-// Instantiate the keyExpansion module
-keyExpansion #(nk, nr) key_expansion_inst (keyin,keys);
-
-// Test stimulus
-
-integer i;
-
-	initial begin
-		keyin = 128'h2b7e151628aed2a6abf7158809cf4f3c;
-        //keyin = 256'h603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4;
-       // keyin = 192'h8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b;
-		#10;
-
-		for (i = 0; i < (nr+1)*4; i = i + 1) begin
-			$display("keys[%0d] = %h", i, keys[(i * 32) +: 32]);
-		end
-	end
 
 endmodule

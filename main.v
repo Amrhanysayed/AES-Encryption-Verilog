@@ -1,4 +1,4 @@
- module main(input[3:0]SW,input clk,output wire[6:0] HEX0,output wire[6:0] HEX1,output wire[6:0] HEX2,output wire[0:0] LEDR,output wire[127:0]out_main,output wire[11:0] test_encorder); 
+ module main(input[3:0]SW,input clk,output wire[6:0] HEX0,output wire[6:0] HEX1,output wire[6:0] HEX2,output wire[0:0] LEDR); 
 
 ////////////////////////////////////////////////////// new main  ////////////////////////////////////////////////////////////////
 /*
@@ -9,7 +9,8 @@ SW[3] = reset
 output wire[11:0] test_encorder ---> for testing only
 output wire[127:0]out_main ---> for testing only
 */
-
+wire[127:0]out_main; 
+wire[11:0] test_encorder;
 localparam nk_128 =4 ;
 localparam nr_128 =10 ;
 localparam nk_192 =6 ;
@@ -62,11 +63,11 @@ Encrypt #(nk_256, nr_256) e256(key_256,clk, SW[3], state,expansion_256, out_256)
 Decrypt #(nk_128, nr_128) d128(key_128,clk,enable_Decipher_128,out_main,expansion_128,out_desipher_128);
 Decrypt #(nk_192, nr_192) d192(key_192,clk,enable_Decipher_192,out_main,expansion_192,out_desipher_192);
 Decrypt #(nk_256, nr_256) d256(key_256,clk,enable_Decipher_256,out_main,expansion_256,out_desipher_256);
-always@(posedge clk or posedge SW[3])
+always@(posedge clk or posedge SW[3]or negedge SW[3])
 begin
    if(SW[3]==1) // reset
    begin
-    out_main_reg=state;
+    out_main_reg=0;
     counter=-1;
    end
 
@@ -137,8 +138,6 @@ begin
 
       counter=counter+1;
     end  
-
-
 end
 assign out_main = counter == 0 ? state : out_main_reg;
 /////////////////////////////////////////////Encorder && decoder ///////////////////////////////////////////////
@@ -153,7 +152,7 @@ Decoder de1 (Output_Encoder,HEX0,HEX1,HEX2);
 ///////////////////////////////////////////////////////flag check///////////////////////////////////////////////////
 
 reg ledr;
-always @(posedge clk)
+always @(*)
 begin
      if(state==out_main&&counter>nr_128)
           ledr=1;
@@ -164,77 +163,4 @@ assign LEDR[0]=ledr;
 
 endmodule
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-module main_tb;
-  // Inputs
-  reg[2:0] SW;
-  reg clk;
-
-  // Outputs
-  wire [6:0] HEX0;
-  wire [6:0] HEX1;
-  wire [6:0] HEX2;
-  wire [1:0] LEDR;
-  wire  [127:0]out_main;
-     wire [11:0] test_encorder;
-  // Instantiate the Unit Under Test (UUT)
- main uut (
-    .SW(SW),
-    .clk(clk),
-    .HEX0(HEX0),
-    .HEX1(HEX1),
-    .HEX2(HEX2),
-    .LEDR(LEDR),
-     .out_main(out_main),
-     .test_encorder(test_encorder)
-  );
-
-  // Clock generator
-  always #5 clk = ~clk;
-  integer i;
- integer j;
-  // Test sequence
-  initial begin
-    // Initialize Inputs
-   SW = 0;
-    clk = 0;
-
-    //Wait for 100 clock cycles
-    for ( i = 0; i < 100; i = i + 1) begin
-      #5;
-      clk = ~clk;
-    end
-
-    
-    //// 128 bit
-    SW = 1;
-    // Wait for 11 clock cycles
-   
-    for ( j = 0; j < 22; j = j + 1) begin
-      #5;
-      clk = ~clk;
-    end
-
-      //// 192 bit
-//     SW = 2;
-//     // Wait for 13 clock cycles
-//     for ( j = 0; j < 13; j = j + 1) begin
-//       #5;
-//       clk = ~clk;
-//     end
-
- //// 256 bit
-//     // Test SW = 2
-//     SW = 4;
-//     // Wait for 15 clock cycles
-//     for ( j = 0; j < 15; j = j + 1) begin
-//       #5;
-//       clk = ~clk;
-//     end
-$monitor("%b %h %h %h %b %h %h ",SW,HEX0,HEX1,HEX2,LEDR,out_main,test_encorder);
-   
-  end
-
-endmodule
+///////////////////////////////////////////////////////end main////////////////////////////////////////////////
