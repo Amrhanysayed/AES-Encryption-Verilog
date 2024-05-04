@@ -28,9 +28,6 @@ wire [127:0]out_desipher_256;
 //wire [127:0]out_main;
 reg [127:0]out_main_reg;
 //////////////////////////////////// enables //////////////////////////////////////////////////
-integer enable_Encipher_128;
-integer enable_Encipher_192;
-integer enable_Encipher_256;
 integer enable_Decipher_128;
 integer enable_Decipher_192;
 integer enable_Decipher_256;
@@ -63,8 +60,8 @@ always@(posedge clk or posedge SW[3])
 begin
    if(SW[3]==1) // reset
    begin
-    out_main_reg=0;
-    counter=0;
+    out_main_reg=state;
+    counter=-1;
    end
 
     else if(SW[0]==1) // 128 bit
@@ -72,21 +69,23 @@ begin
 
     enable_Decipher_192=0;
     enable_Decipher_256=0;
-     if(counter<=11)
+     if(counter<=10)
      begin
       out_main_reg=out_128;
-      if(counter==11)
+      if(counter==10)
           begin
           enable_Decipher_128=1;
           end
      end
-      else if(counter>11)
+      else if(counter>10)
      begin
           out_main_reg=out_desipher_128;
              
      end
          
-   
+
+    counter=counter+1;
+
      end
     
     else if(SW[1]==1) // 192 bit
@@ -94,20 +93,22 @@ begin
 
       enable_Decipher_128=0;
       enable_Decipher_256=0;
-     if(counter<=13)
+     if(counter<=12)
      begin
       out_main_reg=out_192;
-      if(counter==13)
+      if(counter==12)
           begin
           enable_Decipher_192=1;
           end
      end
-        else if(counter>13)
+        else if(counter>12)
      begin
          
         out_main_reg=out_desipher_192;
      end
     
+    counter=counter+1;
+
     end
     else if(SW[2]==1) // 256 bit
     begin
@@ -115,21 +116,22 @@ begin
       enable_Decipher_128=0;
       enable_Decipher_192=0;
 
-      if(counter<=15)
+      if(counter<=14)
       begin
       out_main_reg=out_256;
-      if(counter==15)
+      if(counter==14)
         begin
         enable_Decipher_256=1;
         end
       end
-      else if(counter>15)
+      else if(counter>14)
       begin
         out_main_reg=out_desipher_256;  
       end
+
+      counter=counter+1;
     end  
 
-  counter=counter+1;
 
 end
 assign out_main = counter == 0 ? state : out_main_reg;
