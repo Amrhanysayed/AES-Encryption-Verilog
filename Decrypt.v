@@ -1,6 +1,6 @@
 
 
-module Decrypt  #(parameter nk=4,parameter nr=10) ( input  [(nk*32)-1:0] key , input clk, input  enable,input [127:0]state,output wire [127:0] out1);
+module Decrypt  #(parameter nk=4,parameter nr=10) ( input  [(nk*32)-1:0] key , input clk, input  enable,input [127:0]state,input [0:((nr+1)*128)-1] w,output wire [127:0] out1);
     //  wire  [(nk*32)-1:0] key;
     reg  [127:0] state0;
     // wire [127:0] state;
@@ -8,7 +8,7 @@ module Decrypt  #(parameter nk=4,parameter nr=10) ( input  [(nk*32)-1:0] key , i
     wire [127:0] out;
     wire [127:0] out_lastround;
   
-    wire [0:((nr+1)*128)-1] w;
+    
   // for testing only /////////////////////////////////////////
 //     assign state = 128'h69c4e0d86a7b0430d8cdb78070b4c55a;
 //    assign key = 128'h000102030405060708090a0b0c0d0e0f;
@@ -17,7 +17,7 @@ module Decrypt  #(parameter nk=4,parameter nr=10) ( input  [(nk*32)-1:0] key , i
 
     
    
- keyExpansion #(nk, nr) key_expansion_inst (key,w);
+ //keyExpansion #(nk, nr) key_expansion_inst (key,w);
     round_inverse r(state0,w[((i)*128)+:128],out);
     always@ (posedge clk or posedge enable) 
     begin 

@@ -40,22 +40,28 @@ assign state = 128'h00112233445566778899aabbccddeeff;
 assign key_128 = 128'h000102030405060708090a0b0c0d0e0f;
 assign key_192 = 192'h000102030405060708090a0b0c0d0e0f1011121314151617;
 assign key_256 = 256'h000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f;
+//////////////////////////////////////keys expantions///////////////////////////////////////////////////
+wire[(nr_128+1)*128-1:0]expansion_128;
+wire[((nr_192+1)*128)-1:0]expansion_192;
+wire[((nr_256+1)*128)-1:0]expansion_256;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 initial begin
     enable_Decipher_128=0;
     enable_Decipher_192=0;
     enable_Decipher_256=0;
 end
-
-
+////////////////////////////////////// expantions///////////////////////////////////////////////////
+keyExpansion#(nk_128,nr_128) k128(key_128,expansion_128);
+keyExpansion#(nk_192,nr_192) k192(key_192,expansion_192);
+keyExpansion#(nk_256,nr_256) k256(key_256,expansion_256);
 ///////////////////////////////////////////////Encipher///////////////////////////////////////////////
-Encrypt #(nk_128, nr_128) e128(key_128,clk, SW[3], state, out_128);
-Encrypt #(nk_192, nr_192) e192(key_192,clk, SW[3], state, out_192);
-Encrypt #(nk_256, nr_256) e256(key_256,clk, SW[3], state, out_256);
+Encrypt #(nk_128, nr_128) e128(key_128,clk, SW[3], state,expansion_128, out_128);
+Encrypt #(nk_192, nr_192) e192(key_192,clk, SW[3], state,expansion_192, out_192);
+Encrypt #(nk_256, nr_256) e256(key_256,clk, SW[3], state,expansion_256, out_256);
 /////////////////////////////////////////////Decipher///////////////////////////////////////////////
-Decrypt #(nk_128, nr_128) d128(key_128,clk,enable_Decipher_128,out_main,out_desipher_128);
-Decrypt #(nk_192, nr_192) d192(key_192,clk,enable_Decipher_192,out_main,out_desipher_192);
-Decrypt #(nk_256, nr_256) d256(key_256,clk,enable_Decipher_256,out_main,out_desipher_256);
+Decrypt #(nk_128, nr_128) d128(key_128,clk,enable_Decipher_128,out_main,expansion_128,out_desipher_128);
+Decrypt #(nk_192, nr_192) d192(key_192,clk,enable_Decipher_192,out_main,expansion_192,out_desipher_192);
+Decrypt #(nk_256, nr_256) d256(key_256,clk,enable_Decipher_256,out_main,expansion_256,out_desipher_256);
 always@(posedge clk or posedge SW[3])
 begin
    if(SW[3]==1) // reset
