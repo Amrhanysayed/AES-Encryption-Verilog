@@ -22,24 +22,30 @@ module Decrypt  #(parameter nk=4,parameter nr=10) ( input  [(nk*32)-1:0] key , i
     always@ (posedge clk or posedge enable) 
     begin 
         if(enable==1'b1)
-    begin
-         if(i==nr && state !== 'bx)
         begin
-            state0<=state^w[((nr)*128)+:128];
-            temp<=state^w[((nr)*128)+:128];
+            if(i==nr && state !== 'bx)
+            begin
+                state0<=state^w[((nr)*128)+:128];
+                temp<=state^w[((nr)*128)+:128];
+                i=i-1;
+            end
+            else if(i>0&& state !== 'bx)
+            begin
+            state0<=out;  
+            temp<=out;
             i=i-1;
+            end
+            else if(i==0 && state !== 'bx)
+            begin
+                temp<=out_lastround;
+                i=i-1;
+            end
         end
-        else if(i>0&& state !== 'bx)
+        else
         begin
-        state0<=out;  
-        temp<=out;
-        i=i-1;
-        end
-        else if(i==0 && state !== 'bx)
-        begin
-            temp<=out_lastround;
-            i=i-1;
-        end
+            i = nr;
+            state0 <= 'bx;
+            temp <= 'bx;
         end
     end
     assign out1=temp;

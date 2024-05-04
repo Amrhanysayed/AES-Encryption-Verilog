@@ -1,4 +1,4 @@
-module Encrypt  #(parameter nk=4,parameter nr=10) (input  [(nk*32)-1:0] key,input clk,input [127:0]state,output wire [127:0] out1);
+module Encrypt  #(parameter nk=4,parameter nr=10) (input  [(nk*32)-1:0] key,input clk, input  reset,input [127:0]state,output wire [127:0] out1);
     //;
     //wire [127:0] state;
     reg  [127:0] state0;
@@ -14,24 +14,33 @@ module Encrypt  #(parameter nk=4,parameter nr=10) (input  [(nk*32)-1:0] key,inpu
     wire [0:((nr+1)*128)-1] w;
     keyExpansion #(nk, nr) key_expansion_inst (key,w);
     round x(state0, w[((i+1)*128)+:128],out);   
- always@ (posedge clk) 
+ always@ (posedge clk or posedge reset)
     begin 
-        if(i==-1 && state !== 'bx)
+        if(reset==1'b1)
         begin
-            state0<=state^w[0:127];
-            temp=state^w[0:127];
-            i=i+1;
+            i=-1;
+            state0 <= 'bx;
+            temp <= 'bx;
         end
-        else if(i < (nr-1) && state !== 'bx)
+        else
         begin
-        state0<=out;  
-        temp<=out;
-        i=i+1;
-        end
-        else if(i == (nr-1) && state !== 'bx)
-        begin
-            temp<=out_lastround;
+            if(i==-1 && state !== 'bx)
+            begin
+                state0<=state^w[0:127];
+                temp=state^w[0:127];
+                i=i+1;
+            end
+            else if(i < (nr-1) && state !== 'bx)
+            begin
+            state0<=out;  
+            temp<=out;
             i=i+1;
+            end
+            else if(i == (nr-1) && state !== 'bx)
+            begin
+                temp<=out_lastround;
+                i=i+1;
+            end
         end
     end
     assign out1=temp;
