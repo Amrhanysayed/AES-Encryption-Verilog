@@ -63,14 +63,14 @@ Encrypt #(nk_256, nr_256) e256(key_256,clk, SW[3], state,expansion_256, out_256)
 Decrypt #(nk_128, nr_128) d128(key_128,clk,enable_Decipher_128,out_main,expansion_128,out_desipher_128);
 Decrypt #(nk_192, nr_192) d192(key_192,clk,enable_Decipher_192,out_main,expansion_192,out_desipher_192);
 Decrypt #(nk_256, nr_256) d256(key_256,clk,enable_Decipher_256,out_main,expansion_256,out_desipher_256);
-always@(posedge clk or posedge SW[3]or negedge SW[3])
+always@(posedge clk or  posedge SW[3])
 begin
-   if(SW[3]==1) // reset
+   if(SW[3]==1)
    begin
-    out_main_reg=0;
-    counter=-1;
+     counter=-1;
+     out_main_reg=0;
    end
-
+ 
     else if(SW[0]==1) // 128 bit
     begin
 
@@ -138,7 +138,9 @@ begin
 
       counter=counter+1;
     end  
+   
 end
+
 assign out_main = counter == 0 ? state : out_main_reg;
 /////////////////////////////////////////////Encorder && decoder ///////////////////////////////////////////////
 wire [11:0] Output_Encoder;
