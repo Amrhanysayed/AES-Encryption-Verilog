@@ -1,4 +1,4 @@
-module Encrypt  #(parameter nk=4,parameter nr=10) (input  [(nk*32)-1:0] key,input clk, input  reset,input [127:0]state,input [0:((nr+1)*128)-1] w,output wire [127:0] out1);
+module Encrypt  #(parameter nk=4,parameter nr=10) (input  [(nk*32)-1:0] key,input clk, input  reset,input [127:0]state,output wire [127:0] out1);
     //;
     //wire [127:0] state;
     reg  [127:0] state0;
@@ -11,8 +11,8 @@ module Encrypt  #(parameter nk=4,parameter nr=10) (input  [(nk*32)-1:0] key,inpu
     // assign state = 128'h00112233445566778899aabbccddeeff;
     // assign key = 256'h000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f;
     //////////////////////////////////////////////////////////////
-    
-   // keyExpansion #(nk, nr) key_expansion_inst (key,w);
+    wire [0:((nr+1)*128)-1] w;
+    keyExpansion #(nk, nr) key_expansion_inst (key,w);
     round x(state0, w[((i+1)*128)+:128],out);   
  always@ (posedge clk or posedge reset)
     begin 
