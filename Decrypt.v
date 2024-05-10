@@ -1,43 +1,41 @@
 
 
-module Decrypt  #(parameter nk=4,parameter nr=10) ( input  [(nk*32)-1:0] key , input clk, input enable,input [127:0]state,input [0:((nr+1)*128)-1] w,output wire [127:0] out1);
-    reg  [127:0] state0;
+module Decrypt  #(parameter nk=4,parameter nr=10) ( input  [(nk*32)-1:0] key , input clk, input reset,input [127:0]state,input [0:((nr+1)*128)-1] w,output wire [127:0] out1);
     reg  [127:0]temp;
     wire [127:0] out;
     wire [127:0] out_lastround;
-    integer i=nr;
-    round_inverse r(state0,w[((i)*128)+:128],out);
-    always@ (posedge clk) 
+    //integer i=nr;
+    integer i=-1;
+    round_inverse r(temp,w[(((2*nr)-i)*128)+:128],out);
+    always@ (posedge clk or posedge reset) 
     begin 
-        if(enable==1'b1)
+        // if(enable==1'b1)
+        // begin
+        if(reset==1'b1)
         begin
-            if(i==nr && state !== 'bx)
-            begin
-                state0<=state^w[((nr)*128)+:128];
-                temp<=state^w[((nr)*128)+:128];
-                i<=i-1;
-            end
-            else if(i>0&& state !== 'bx)
-            begin
-            state0<=out;  
-            temp<=out;
-            i<=i-1;
-            end
-            else if(i==0 && state !== 'bx)
-            begin
-                temp<=out_lastround;
-                i<=i-1;
-            end
+            //i<=nr;
+            temp<=state^w[((nr)*128)+:128];
+            i<=0;
         end
         else
         begin
-            i <= nr;
-            state0 <= 'bx;
-            temp <= 'bx;
+            i <= i + 1;
+            if(i==nr && state !== 'bx)
+            begin
+                temp<=state^w[((nr)*128)+:128];
+            end
+            else if(i == 2*nr && state !== 'bx)
+            begin
+                temp<=out_lastround;
+            end
+            else if(i > nr && i < 2*nr && state !== 'bx)
+            begin
+                temp<=out;
+            end
         end
     end
     assign out1=temp;
-    last_round_inv l(state0,w [((i)*128)+:128],out_lastround);
+    last_round_inv l(temp,w [0+:128],out_lastround);
 endmodule
 
 
