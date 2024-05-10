@@ -6,11 +6,8 @@ SW[0] = 128 bit
 SW[1] = 192 bit
 SW[2] = 256 bit
 SW[3] = reset
-output wire[11:0] test_encorder ---> for testing only
-output wire[127:0]out_main ---> for testing only
 */
-wire[127:0]out_main; 
-wire[11:0] test_encorder;
+
 localparam nk_128 =4 ;
 localparam nr_128 =10 ;
 localparam nk_192 =6 ;
@@ -25,9 +22,10 @@ wire [127:0]out_256;
 wire [127:0]out_desipher_128;
 wire [127:0]out_desipher_192;
 wire [127:0]out_desipher_256;
-// reg [127:0]out_main_decipher_reg;
-//wire [127:0]out_main;
-reg [127:0]  out_main_reg;
+wire [11:0] out_encoder;
+
+//////////////////////////////////////main output///////////////////////////////////////////////////
+wire[127:0]  out_main; 
 wire [127:0] out_main_128;
 wire [127:0] out_main_192;
 wire [127:0] out_main_256;
@@ -66,16 +64,15 @@ begin
     else
       counter<=counter+1;
 end
-assign out_main_128 = counter == 0 ? state : counter <= 10 ? out_128 : out_desipher_128;
-assign out_main_192 = counter == 0 ? state : counter <= 12 ? out_192 : out_desipher_192;
-assign out_main_256 = counter == 0 ? state : counter <= 14 ? out_256 : out_desipher_256;
+assign out_main_128 = counter == 0 ? state : counter <= nr_128 ? out_128 : out_desipher_128;
+assign out_main_192 = counter == 0 ? state : counter <= nr_192 ? out_192 : out_desipher_192;
+assign out_main_256 = counter == 0 ? state : counter <= nr_256 ? out_256 : out_desipher_256;
 assign out_main = SW == 3'b0001 ? out_main_128 : SW == 3'b0010 ? out_main_192 : SW == 3'b0100 ? out_main_256 : 0;
 
 /////////////////////////////////////////////Encorder && decoder ///////////////////////////////////////////////
-wire [11:0] Output_Encoder;
-assign test_encorder=Output_Encoder;
-Encoder en1 (out_main[7:0],Output_Encoder);
-Decoder de1 (Output_Encoder,HEX0,HEX1,HEX2);
+
+Encoder en1 (out_main[7:0],out_encoder);
+Decoder de1 (out_encoder,HEX0,HEX1,HEX2);
 
 
 

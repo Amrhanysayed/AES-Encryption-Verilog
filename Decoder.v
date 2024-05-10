@@ -19,7 +19,7 @@ else if(word[3:0]==5)
 else if(word[3:0]==6)
      HEX0_1<=7'b0000010;
 else if(word[3:0]==7)
-     HEX0_1<=7'b0111000;
+     HEX0_1<=7'b1111000;
 else if(word[3:0]==8)
      HEX0_1<=7'b0000000;
 else if(word[3:0]==9)
