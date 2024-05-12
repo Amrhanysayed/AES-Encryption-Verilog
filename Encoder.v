@@ -10,11 +10,11 @@ module Encoder(input [7:0]bin,output wire[11:0]bcd_out);
                     
                 //if a binary digit of 'bcd' is more than 4, add 3 to it.  
                 if(i < 7 && bcd[3:0] > 4) 
-                    bcd[3:0] = bcd[3:0] + 3;
+                    bcd[3:0] = bcd[3:0] + 4'b0011;
                 if(i < 7 && bcd[7:4] > 4)
-                    bcd[7:4] = bcd[7:4] + 3;
+                    bcd[7:4] = bcd[7:4] + 4'b0011;
                 if(i < 7 && bcd[11:8] > 4)
-                    bcd[11:8] = bcd[11:8] + 3;  
+                    bcd[11:8] = bcd[11:8] + 4'b0011;
             end
         end    
     assign bcd_out=bcd; //assign the output
