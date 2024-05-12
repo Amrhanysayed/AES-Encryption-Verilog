@@ -52,9 +52,9 @@ Encrypt #(nk_128, nr_128) e128(key_128,KEY[0], SW[3], state,expansion_128, out_1
 Encrypt #(nk_192, nr_192) e192(key_192,KEY[0], SW[3], state,expansion_192, out_192);
 Encrypt #(nk_256, nr_256) e256(key_256,KEY[0], SW[3], state,expansion_256, out_256);
 /////////////////////////////////////////////Decipher///////////////////////////////////////////////
-Decrypt #(nk_128, nr_128) d128(key_128,KEY[0], SW[3],out_main,expansion_128,out_desipher_128);
-Decrypt #(nk_192, nr_192) d192(key_192,KEY[0], SW[3],out_main,expansion_192,out_desipher_192);
-Decrypt #(nk_256, nr_256) d256(key_256,KEY[0], SW[3],out_main,expansion_256,out_desipher_256);
+Decrypt #(nk_128, nr_128) d128(key_128,KEY[0], SW[3],out_main_128,expansion_128,out_desipher_128);
+Decrypt #(nk_192, nr_192) d192(key_192,KEY[0], SW[3],out_main_192,expansion_192,out_desipher_192);
+Decrypt #(nk_256, nr_256) d256(key_256,KEY[0], SW[3],out_main_256,expansion_256,out_desipher_256);
 always@(posedge KEY[0] or posedge SW[3])
 begin
     if(SW[3]==1) // reset
