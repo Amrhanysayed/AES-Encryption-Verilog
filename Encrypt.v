@@ -2,18 +2,23 @@ module Encrypt  #(parameter nk=4,parameter nr=10) (input  [(nk*32)-1:0] key,inpu
     reg  [127:0] temp;
     wire [127:0] out;
     wire [127:0] out_lastround;
-    integer i=-1;
+    integer i=-2;
     round x(temp, w[((i+1)*128)+:128],out);   
  always@ (posedge clk or posedge reset)
     begin 
         if(reset==1'b1)
         begin
-            i<=0;
-            temp <= state^w[0:127];
+            i<=-1;
+            temp <= state;
         end
         else
         begin
-            if(i==-1 && state !== 'bx)
+            if(i==-2 && state !== 'bx)
+            begin
+                temp<=state;
+                i<=i+1;
+            end
+            else if(i==-1 && state !== 'bx)
             begin
                 temp<=state^w[0:127];
                 i<=i+1;

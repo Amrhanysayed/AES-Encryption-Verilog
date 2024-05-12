@@ -64,10 +64,10 @@ begin
     else
       counter<=counter+1;
 end
-assign out_main_128 = counter == 0 ? state : counter <= nr_128 ? out_128 : out_desipher_128;
-assign out_main_192 = counter == 0 ? state : counter <= nr_192 ? out_192 : out_desipher_192;
-assign out_main_256 = counter == 0 ? state : counter <= nr_256 ? out_256 : out_desipher_256;
-assign out_main = SW == 3'b0001 ? out_main_128 : SW == 3'b0010 ? out_main_192 : SW == 3'b0100 ? out_main_256 : 0;
+assign out_main_128 = counter <= nr_128+1 ? out_128 : out_desipher_128;
+assign out_main_192 = counter <= nr_192+1 ? out_192 : out_desipher_192;
+assign out_main_256 = counter <= nr_256+1 ? out_256 : out_desipher_256;
+assign out_main = SW[3] == 1'b1 ? 'b0 : SW[0] == 1'b1 ? out_main_128 : SW[1] == 1'b1 ? out_main_192 : SW[2] == 1'b1 ? out_main_256 : 0;
 
 /////////////////////////////////////////////Encorder && decoder ///////////////////////////////////////////////
 
