@@ -32,7 +32,7 @@ Furthermore, the project includes an encoder to convert the last 1 byte to BCD a
 
 ### Configuring the AES Encryption Parameters
 
-- Modify the encryption parameters (key length, input data, etc.) in the provided Verilog files as needed.
+- Modify the encryption parameters (key length, input data, etc.) in the provided main module (main.v) as needed.
 
 ### Synthesizing and Deploying
 
@@ -45,9 +45,3 @@ Furthermore, the project includes an encoder to convert the last 1 byte to BCD a
 1. Open the project directory in ModelSim.
 2. Create simulation testbenches to verify the functionality of the AES encryption modules.
 3. Run simulations to ensure correct operation.
-
-- [Author Name](https://github.com/authorname)
-
-## Acknowledgments
-
-- Special thanks to [Name] for their contributions.
