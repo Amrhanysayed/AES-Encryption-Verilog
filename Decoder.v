@@ -44,7 +44,7 @@ else if(word[7:4]==5)
 else if(word[7:4]==6)
      HEX0_2<=7'b0000010;
 else if(word[7:4]==7)
-     HEX0_2<=7'b0111000;
+     HEX0_2<=7'b1111000;
 else if(word[7:4]==8)
      HEX0_2<=7'b0000000;
 else if(word[7:4]==9)
@@ -69,7 +69,7 @@ else if(word[11:8]==5)
 else if(word[11:8]==6)
      HEX0_3<=7'b0000010;
 else if(word[11:8]==7)
-     HEX0_3<=7'b0111000;
+     HEX0_3<=7'b1111000;
 else if(word[11:8]==8)
      HEX0_3<=7'b0000000;
 else if(word[11:8]==9)
